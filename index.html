@@ -71,8 +71,12 @@
         }
         else {
 
-            if (/Android|webOS|iPhone|iPad|Mac|Macintosh|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                document.getElementById("iApp").src= "https://app.buildfire.com/app/index.html?appId=" + qs.appid + "&mode=0"
+            let url="https://app.buildfire.com/app/index.html?appId=" + qs.appid + "&mode=0";
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                window.location=url;
+            }
+            else{
+                document.getElementById("iApp").src= url;
             }
         }
     </script>
