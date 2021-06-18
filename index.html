@@ -25,7 +25,7 @@
 
 </head>
 <body>
-
+    <p id="userAgent"></p>
     <div class="marvel-device iphone-x">
         <div class="notch">
             <div class="camera"></div>
@@ -64,6 +64,8 @@
 
         let qs = parseQuery();
 
+
+        document.getElementById("userAgent").innerHTML= navigator.userAgent;
         if(!qs.appid){
             document.querySelector(".screen").innerHTML="<p>No App ID has been provided.</p>";
         }
