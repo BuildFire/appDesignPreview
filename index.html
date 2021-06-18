@@ -9,6 +9,7 @@
     <style>
         body{
             text-align: center;
+            font-family: Tahoma;
         }
 
         #iApp{
@@ -16,17 +17,32 @@
             padding-top:30px;
             width:100%;
             height: 100%;
+            opacity: 0;
         }
 
+        .active{
+            animation: fadeIn 500ms ease-in;
+            opacity: 1 !important;
+        }
+
+        #phone{
+            animation: fadeIn 500ms ease-in;
+        }
+
+        @keyframes fadeIn {
+            0%{ opacity: 0}
+            100%{ opacity: 1}
+        }
         .screen > p {
             padding-top:50px;
+
         }
     </style>
 
 </head>
 <body>
-    <p id="userAgent"></p>
-    <div class="marvel-device iphone-x">
+
+    <div id="phone" class="marvel-device iphone-x">
         <div class="notch">
             <div class="camera"></div>
             <div class="speaker"></div>
@@ -43,9 +59,11 @@
         </div>
         <div class="inner-shadow"></div>
         <div class="screen">
+            <p id="loading">Loading...</p>
             <iframe id="iApp" ></iframe>
         </div>
     </div>
+    <p id="userAgent"></p>
 
 
     <script>
@@ -64,10 +82,10 @@
 
         let qs = parseQuery();
 
-
+        let screen=document.querySelector(".screen");
         document.getElementById("userAgent").innerHTML= navigator.userAgent;
         if(!qs.appid){
-            document.querySelector(".screen").innerHTML="<p>No App ID has been provided.</p>";
+            screen.innerHTML="<p>No App ID has been provided.</p>";
         }
         else {
 
@@ -76,7 +94,13 @@
                 window.location=url;
             }
             else{
-                document.getElementById("iApp").src= url;
+                let iApp = document.getElementById("iApp");
+                iApp.src= url;
+                setTimeout(()=>{
+                    screen.removeChild( document.getElementById("loading"));
+                    iApp.classList.add("active");
+                },3000);
+
             }
         }
     </script>
