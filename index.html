@@ -91,7 +91,7 @@
         }
         else {
 
-            let url="https://app.buildfire.com/app/index.html?appId=" + qs.appid + "&mode=0";
+            let url="https://app.buildfire.com/app/index.html?appId=" + qs.appid + "&mode=0&forceOnboarding=true";
             if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
                 window.location=url;
             }
@@ -101,7 +101,7 @@
                 setTimeout(()=>{
                     screen.removeChild( document.getElementById("loading"));
                     iApp.classList.add("active");
-                },3000);
+                },1000);
 
             }
         }
