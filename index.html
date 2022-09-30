@@ -2,33 +2,47 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="shortcut icon" href="https://buildfire.com/wp-content/themes/buildfire/assets/images/buildfire-favicon.png">
     <title>Mobile Preview</title>
 
     <link rel="stylesheet" href="devices.min.css" type="text/css">
 
     <style>
-        body{
+        body {
+            background-color: #ffffff;
+            background-image: linear-gradient(180deg, #ffffff 0%, #ffffff 20%, #64aeda 53%, #bad4d1 68%, #ffffff 88%, #ffffff 100%);
+
             text-align: center;
             font-family: Tahoma;
+        }
+        #phones{
+            display: grid;
+            grid-auto-flow: column;
+        }
+
+        .iphone-x{
+
+            animation: fadeIn 500ms ease-in;
+
         }
 
         .notch{
             display: none;
         }
-        #iApp{
+
+        iframe{
+            border: none;
             background-color:black;
             width:100%;
             height: 100%;
-            opacity: 0;
         }
 
-        .active{
-            animation: fadeIn 500ms ease-in;
-            opacity: 1 !important;
-        }
+        #logo{
+            position: absolute;
+            left: calc(100vw - 100px);
+            top: calc(100vh - 100px);
+            height: 100px;
 
-        #phone{
-            animation: fadeIn 500ms ease-in;
         }
 
         @keyframes fadeIn {
@@ -43,30 +57,30 @@
 
 </head>
 <body>
-
-    <div id="phone" class="marvel-device iphone-x">
-        <div class="notch">
-            <div class="camera"></div>
-            <div class="speaker"></div>
-        </div>
-        <div class="top-bar"></div>
-        <div class="sleep"></div>
-        <div class="bottom-bar"></div>
-        <div class="volume"></div>
-        <div class="overflow">
-            <div class="shadow shadow--tr"></div>
-            <div class="shadow shadow--tl"></div>
-            <div class="shadow shadow--br"></div>
-            <div class="shadow shadow--bl"></div>
-        </div>
-        <div class="inner-shadow"></div>
-        <div class="screen">
-            <p id="loading">Loading...</p>
-            <iframe id="iApp" ></iframe>
+    <img id="logo" src="logo.png">
+    <div id="template" style="display:none">
+        <div class="marvel-device iphone-x">
+            <div class="notch">
+                <div class="camera"></div>
+                <div class="speaker"></div>
+            </div>
+            <div class="top-bar"></div>
+            <div class="sleep"></div>
+            <div class="bottom-bar"></div>
+            <div class="volume"></div>
+            <div class="overflow">
+                <div class="shadow shadow--tr"></div>
+                <div class="shadow shadow--tl"></div>
+                <div class="shadow shadow--br"></div>
+                <div class="shadow shadow--bl"></div>
+            </div>
+            <div class="inner-shadow"></div>
+            <div class="screen">
+                <iframe></iframe>
+            </div>
         </div>
     </div>
-    <p id="userAgent"></p>
-
+    <div id="phones"></div>
 
     <script>
 
@@ -85,25 +99,31 @@
         let qs = parseQuery();
 
         let screen=document.querySelector(".screen");
-        document.getElementById("userAgent").innerHTML= navigator.userAgent;
+        //document.getElementById("userAgent").innerHTML= navigator.userAgent;
         if(!qs.appid){
             screen.innerHTML="<p>No App ID has been provided.</p>";
         }
         else {
+            let appIds = qs.appid.split(",");
+            let template = document.getElementById("template");
+            appIds.forEach(appId =>{
+                appId=appId.trim();
+                let url="https://app.buildfire.com/app/index.html?appId=" + appId + "&mode=0&forceOnboarding=true";
+                if ( appIds.length < 2 && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                    window.location=url;
+                }
+                else{
+                    console.log("create");
+                    let divApp = document.createElement('div');
+                    divApp.classList.add("appContainer");
+                    divApp.classList.add("active");
+                    divApp.innerHTML = template.innerHTML;
+                    divApp.querySelector('iframe').src= url;
 
-            let url="https://app.buildfire.com/app/index.html?appId=" + qs.appid + "&mode=0&forceOnboarding=true";
-            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                window.location=url;
-            }
-            else{
-                let iApp = document.getElementById("iApp");
-                iApp.src= url;
-                setTimeout(()=>{
-                    screen.removeChild( document.getElementById("loading"));
-                    iApp.classList.add("active");
-                },1000);
+                    phones.appendChild(divApp);
+                }
+            });
 
-            }
         }
     </script>
 
