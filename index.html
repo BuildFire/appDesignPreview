@@ -14,6 +14,7 @@
 
             text-align: center;
             font-family: Tahoma;
+            height: 100vh;
         }
         #phones{
             display: grid;
@@ -53,6 +54,16 @@
             padding-top:50px;
 
         }
+
+        .hideButton{
+            margin: 10px;
+            padding: 10px;
+            cursor: pointer;
+            background-color: white;
+            border:none;
+            box-shadow: #3c3d3d 2px 2px 5px;
+            border-radius: 5px;
+        }
     </style>
 
 </head>
@@ -79,6 +90,8 @@
                 <iframe></iframe>
             </div>
         </div>
+        <br/>
+        <button class="hideButton" onclick="this.parentNode.style.display='none';">X</button>
     </div>
     <div id="phones"></div>
 
@@ -119,6 +132,9 @@
                     divApp.classList.add("active");
                     divApp.innerHTML = template.innerHTML;
                     divApp.querySelector('iframe').src= url;
+
+                    if(appIds.length<2)
+                        divApp.querySelector('.hideButton').style.display='none';
 
                     phones.appendChild(divApp);
                 }
