@@ -10,15 +10,20 @@
     <style>
         body {
             background-color: #ffffff;
-            background-image: linear-gradient(180deg, #ffffff 0%, #ffffff 20%, #64aeda 53%, #bad4d1 68%, #ffffff 88%, #ffffff 100%);
-
+            /*background-image: linear-gradient(180deg, #ffffff 0%, #ffffff 20%, #64aeda 53%, #bad4d1 68%, #ffffff 88%, #ffffff 100%);
+                */
+            background: url(./bg.png) ;
+            background-size: cover;
             text-align: center;
             font-family: Tahoma;
             height: 100vh;
         }
-        #phones{
-            display: grid;
-            grid-auto-flow: column;
+
+        .flex{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content:space-around;
+            padding: 10px;
         }
 
         .iphone-x{
@@ -39,7 +44,7 @@
         }
 
         #logo{
-            position: absolute;
+            position: fixed;
             left: calc(100vw - 100px);
             top: calc(100vh - 100px);
             height: 100px;
@@ -91,9 +96,10 @@
             </div>
         </div>
         <br/>
-        <button class="hideButton" onclick="this.parentNode.style.display='none';">X</button>
+        <button class="hideButton" onclick=" this.parentNode.remove()">X</button>
+        <button class="hideButton" onclick="clonePhone(this.parentNode.querySelector('iframe').src,false,this.parentNode);">+</button>
     </div>
-    <div id="phones"></div>
+    <div id="phones" class="flex"></div>
 
     <script>
 
@@ -109,37 +115,46 @@
             return query;
         }
 
-        let qs = parseQuery();
-
+        let qs = parseQuery()
         let screen=document.querySelector(".screen");
-        //document.getElementById("userAgent").innerHTML= navigator.userAgent;
-        if(!qs.appid){
-            screen.innerHTML="<p>No App ID has been provided.</p>";
+        let template = document.getElementById("template");
+        let phones = document.getElementById("phones");
+
+        function init() {
+            //document.getElementById("userAgent").innerHTML= navigator.userAgent;
+            if (!qs.appid) {
+                screen.innerHTML = "<p>No App ID has been provided.</p>";
+            } else {
+                let appIds = qs.appid.split(",");
+
+                appIds.forEach(appId => {
+                    appId = appId.trim();
+                    let url = "https://app.buildfire.com/app/index.html?appId=" + appId + "&mode=0&forceOnboarding=true";
+                    if (appIds.length < 2 && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                        window.location = url;
+                    } else {
+                        console.log("create");
+                        clonePhone(url,appIds.length < 2);
+                    }
+                });
+
+            }
         }
-        else {
-            let appIds = qs.appid.split(",");
-            let template = document.getElementById("template");
-            appIds.forEach(appId =>{
-                appId=appId.trim();
-                let url="https://app.buildfire.com/app/index.html?appId=" + appId + "&mode=0&forceOnboarding=true";
-                if ( appIds.length < 2 && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                    window.location=url;
-                }
-                else{
-                    console.log("create");
-                    let divApp = document.createElement('div');
-                    divApp.classList.add("appContainer");
-                    divApp.classList.add("active");
-                    divApp.innerHTML = template.innerHTML;
-                    divApp.querySelector('iframe').src= url;
+        init();
 
-                    if(appIds.length<2)
-                        divApp.querySelector('.hideButton').style.display='none';
+        function clonePhone(url,removeHideButton, afterElement){
+            let divApp = document.createElement('div');
+            divApp.classList.add("appContainer");
+            divApp.classList.add("active");
+            divApp.innerHTML = template.innerHTML;
+            if(url)divApp.querySelector('iframe').src = url;
 
-                    phones.appendChild(divApp);
-                }
-            });
-
+            if (removeHideButton)
+                divApp.querySelector('.hideButton').style.display = 'none';
+            if(afterElement)
+                afterElement.after(divApp);
+            else // append at the end
+            phones.appendChild(divApp);
         }
     </script>
 
