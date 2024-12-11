@@ -16,7 +16,9 @@
             background-size: cover;
             text-align: center;
             font-family: Tahoma;
-            height: 100vh;
+            height: calc(100vh - 20px);
+            margin: 0;
+            padding-top: 20px;
         }
 
         .flex{
@@ -45,10 +47,11 @@
 
         #logo{
             position: fixed;
-            left: calc(100vw - 100px);
-            top: calc(100vh - 100px);
+            left: calc(100vw - 110px);
+            top: calc(100vh - 110px);
             height: 100px;
-
+            margin-right: 5px;
+            margin-bottom: 5px;
         }
 
         @keyframes fadeIn {
@@ -73,7 +76,7 @@
 
 </head>
 <body>
-    <img id="logo" src="logo.png">
+    <img id="logo" src="logo.svg">
     <div id="template" style="display:none">
         <div class="marvel-device iphone-x">
             <div class="notch">
